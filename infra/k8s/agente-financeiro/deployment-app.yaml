@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agente-financeiro-app
+  namespace: agente-financeiro
+  labels:
+    app: agente-financeiro
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: agente-financeiro
+  template:
+    metadata:
+      labels:
+        app: agente-financeiro
+    spec:
+      containers:
+        - name: agente-financeiro
+          image: seu-registro/agente-financeiro:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          envFrom:
+            - secretRef:
+                name: agente-financeiro-secrets
