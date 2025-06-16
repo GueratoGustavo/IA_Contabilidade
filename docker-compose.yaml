@@ -1,21 +1,19 @@
-version: "3.9"
-
 services:
   app:
     build:
-      context: ./app
+      context: ./infra/docker/app
       dockerfile: Dockerfile
     container_name: agente-app
     ports:
       - "8000:8000"
     volumes:
-      - ./app:/app
+      - ./infra/docker/app:/app
     networks:
       - agente-net
 
   nginx:
     build:
-      context: ./nginx
+      context: ./infra/docker/nginx
       dockerfile: Dockerfile
     container_name: agente-nginx
     ports:
