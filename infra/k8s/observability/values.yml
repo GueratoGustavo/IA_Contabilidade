@@ -1,0 +1,12 @@
+grafana:
+  adminPassword: admin
+  service:
+    type: LoadBalancer
+
+loki:
+  persistence:
+    enabled: true
+    size: 10Gi
+
+promtail:
+  enabled: true
