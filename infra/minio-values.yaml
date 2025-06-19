@@ -1,0 +1,6 @@
+accessKey: minio
+secretKey: minio123
+persistence:
+  enabled: false
+service:
+  type: NodePort
