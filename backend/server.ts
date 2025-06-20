@@ -1,22 +1,7 @@
-import { app } from "../backend/src/app";
-import dotenv from "dotenv";
-
-dotenv.config();
+import app from "./src/app";
 
 const PORT = process.env.PORT || 3000;
 
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
-
-process.on("uncaughtException", (err) => {
-  console.error("❌ Uncaught Exception:", err);
-  process.exit(1);
-});
-
-process.on("unhandledRejection", (reason: any) => {
-  console.error("❌ Unhandled Rejection:", reason);
-  server.close(() => {
-    process.exit(1);
-  });
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });

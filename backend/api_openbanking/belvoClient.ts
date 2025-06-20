@@ -1,23 +1,44 @@
-import axios, { AxiosInstance } from "axios";
+import axios from "axios";
 
 export class BelvoClient {
-  private axiosInstance: AxiosInstance;
+  private client: ReturnType<typeof axios.create>;
 
-  constructor(apiUrl: string, secretId: string, secretPassword: string) {
-    this.axiosInstance = axios.create({
+  /**
+   * @param apiUrl Base URL da API Belvo
+   * @param secretId ID secreto para autenticação
+   * @param secretPassword Senha secreta para autenticação
+   * @param timeoutMs Tempo máximo de resposta em ms
+   */
+  constructor(
+    apiUrl: string,
+    secretId: string,
+    secretPassword: string,
+    timeoutMs = 15000
+  ) {
+    this.client = axios.create({
       baseURL: apiUrl,
       auth: { username: secretId, password: secretPassword },
-      timeout: 15000,
+      timeout: timeoutMs,
     });
   }
 
-  async get<T>(endpoint: string) {
-    const response = await this.axiosInstance.get<T>(endpoint);
-    return response.data;
+  async get<T>(endpoint: string): Promise<T> {
+    try {
+      const resp = await this.client.get<T>(endpoint);
+      return resp.data;
+    } catch (err: unknown) {
+      console.error(`BelvoClient GET [${endpoint}] error:`, err);
+      throw err;
+    }
   }
 
-  async post<T>(endpoint: string, data?: any) {
-    const response = await this.axiosInstance.post<T>(endpoint, data);
-    return response.data;
+  async post<T>(endpoint: string, data?: any): Promise<T> {
+    try {
+      const resp = await this.client.post<T>(endpoint, data);
+      return resp.data;
+    } catch (err: unknown) {
+      console.error(`BelvoClient POST [${endpoint}] error:`, err);
+      throw err;
+    }
   }
 }
