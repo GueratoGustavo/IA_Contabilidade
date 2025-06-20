@@ -1,14 +1,21 @@
 import { Request, Response, NextFunction } from "express";
+import { AppError } from "../utils/appError";
+import logger from "../utils/logger";
 
 export function errorHandler(
-  err: any,
+  err: Error,
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  console.error(err);
+  const statusCode = err instanceof AppError ? err.statusCode : 500;
+  const message = err.message || "Internal Server Error";
 
-  res.status(err.status || 500).json({
-    message: err.message || "Erro interno do servidor",
+  logger.error(`${req.method} ${req.url} - ${message}`);
+
+  res.status(statusCode).json({
+    status: "error",
+    statusCode,
+    message,
   });
 }
