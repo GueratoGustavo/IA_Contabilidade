@@ -10,6 +10,8 @@ services:
       - "8000:8000"
     volumes:
       - ./infra/docker/app:/app
+    depends_on:
+      - postgres
     networks:
       - agente-net
 
@@ -50,13 +52,14 @@ services:
     image: postgres:14
     container_name: agente-postgres
     environment:
-      - POSTGRES_USER=mlflow
-      - POSTGRES_PASSWORD=mlflow
-      - POSTGRES_DB=mlflow_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=agente_db
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./infra/docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - agente-net
 
@@ -64,8 +67,8 @@ services:
     image: minio/minio
     container_name: agente-minio
     ports:
-      - "9000:9000"   # API
-      - "9001:9001"   # Console UI
+      - "9000:9000"
+      - "9001:9001"
     environment:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin

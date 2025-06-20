@@ -1,5 +1,12 @@
-import axios from "axios";
-import type { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
+
+interface OAuthTokenResponse {
+  access_token: string;
+  token_type?: string;
+  expires_in: number;
+  scope?: string;
+  refresh_token?: string;
+}
 
 export class OpenBankingClient {
   private axiosInstance: AxiosInstance;
@@ -28,9 +35,13 @@ export class OpenBankingClient {
       params.append("scope", this.scopes.join(" "));
     }
 
-    const response = await axios.post(this.tokenUrl, params.toString(), {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    });
+    const response = await axios.post<OAuthTokenResponse>(
+      this.tokenUrl,
+      params.toString(),
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      }
+    );
 
     this.token = response.data.access_token;
     this.tokenExpiresAt = Date.now() + response.data.expires_in * 1000 - 60000;
