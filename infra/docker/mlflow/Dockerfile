@@ -8,8 +8,4 @@ RUN pip install --no-cache-dir mlflow[extras] boto3 sqlalchemy psycopg2-binary
 
 EXPOSE 5000
 
-CMD ["mlflow", "server", 
-     "--host", "0.0.0.0", 
-     "--port", "5000", 
-     "--backend-store-uri", "sqlite:///mlflow.db", 
-     "--default-artifact-root", "./artifacts"]
+CMD ["mlflow", "server", "--host=0.0.0.0", "--port=5000", "--backend-store-uri=sqlite:///mlflow.db"]

@@ -1,5 +1,5 @@
-init.sqlCREATE DATABASE agente_db;
-CREATE DATABASE mlflow_db;
+CREATE DATABASE agentetest_db;
+CREATE DATABASE mlflowtest_db;
 
 CREATE USER mlflow WITH ENCRYPTED PASSWORD 'mlflow';
-GRANT ALL PRIVILEGES ON DATABASE mlflow_db TO mlflow;
+GRANT ALL PRIVILEGES ON DATABASE mlflowtest_db TO mlflow;
