@@ -1,14 +1,13 @@
-FROM python:3.11.9-slim-bullseye
+FROM node:18
 
 WORKDIR /app
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y build-essential
+COPY package*.json ./
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN npm install
 
 COPY . .
 
 EXPOSE 8000
 
-CMD ["python", "main.py"]
+CMD ["npm", "run", "start"]

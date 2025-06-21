@@ -12,6 +12,8 @@ services:
       - ./infra/docker/app:/app
     depends_on:
       - postgres
+    env_file:
+      - .env                       # <--- Carrega variáveis do seu .env
     networks:
       - agente-net
 
