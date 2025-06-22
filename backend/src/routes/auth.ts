@@ -1,4 +1,4 @@
-import express, { Request, Response, RequestHandler } from "express";
+import express, { RequestHandler } from "express";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -16,7 +16,6 @@ const SECRET_KEY = process.env.JWT_SECRET || "seu_segredo_super_secreto";
 
 const router = express.Router();
 
-// Registro de usuário
 const registerHandler: RequestHandler<
   {},
   { message: string } | { error: string },
@@ -40,10 +39,8 @@ const registerHandler: RequestHandler<
   const hashed = await bcrypt.hash(password, 10);
   users.push({ id: uuidv4(), name, email, password: hashed });
   res.status(201).json({ message: "Usuário registrado com sucesso" });
-  return;
 };
 
-// Login de usuário
 const loginHandler: RequestHandler<
   {},
   { token: string } | { error: string },
@@ -75,7 +72,6 @@ const loginHandler: RequestHandler<
     expiresIn: "7d",
   });
   res.json({ token });
-  return;
 };
 
 router.post("/register", registerHandler);

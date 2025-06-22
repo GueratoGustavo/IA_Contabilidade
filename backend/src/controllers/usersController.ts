@@ -2,61 +2,68 @@ import { Request, Response, RequestHandler } from "express";
 import { v4 as uuidv4 } from "uuid";
 import validator from "validator";
 
-// Interface de usuário
 interface User {
   id: string;
   name: string;
   email: string;
 }
 
-// Banco de dados em memória
 const users: User[] = [
   { id: "1", name: "Gustavo", email: "gustavo@email.com" },
 ];
 
-// 🟢 Listar todos os usuários
-export const getUsers: RequestHandler = (req, res) => {
-  res.json(users);
+const findUserById = (id: string): User | undefined =>
+  users.find((u) => u.id === id);
+
+const isValidEmail = (email: unknown): email is string => {
+  return typeof email === "string" && validator.isEmail(email);
 };
 
-// 🟢 Buscar usuário por ID
-export const getUserById: RequestHandler = (req, res) => {
+const isValidName = (name: unknown): name is string => {
+  return typeof name === "string" && name.trim().length > 0;
+};
+
+export const getUsers: RequestHandler = async (_req, res) => {
+  res.status(200).json(users);
+  return;
+};
+
+export const getUserById: RequestHandler = async (req, res) => {
   const { id } = req.params;
-  const user = users.find((u) => u.id === id);
+  const user = findUserById(id);
 
   if (!user) {
     res.status(404).json({ error: "Usuário não encontrado" });
     return;
   }
 
-  res.json(user);
+  res.status(200).json(user);
+  return;
 };
 
-// 🟢 Criar novo usuário
-export const createUser: RequestHandler = (req, res) => {
+export const createUser: RequestHandler = async (req, res) => {
   const { name, email } = req.body;
 
-  if (!name || !email || !validator.isEmail(email)) {
-    res.status(400).json({
-      error: "Nome e email válidos são obrigatórios",
-    });
+  if (!isValidName(name) || !isValidEmail(email)) {
+    res.status(400).json({ error: "Nome e email válidos são obrigatórios" });
     return;
   }
 
   const newUser: User = {
     id: uuidv4(),
-    name,
-    email,
+    name: name.trim(),
+    email: email.toLowerCase(),
   };
 
   users.push(newUser);
+
   res.status(201).json(newUser);
+  return;
 };
 
-// 🟢 Atualizar usuário
-export const updateUser: RequestHandler = (req, res) => {
+export const updateUser: RequestHandler = async (req, res) => {
   const { id } = req.params;
-  const user = users.find((u) => u.id === id);
+  const user = findUserById(id);
 
   if (!user) {
     res.status(404).json({ error: "Usuário não encontrado" });
@@ -65,20 +72,27 @@ export const updateUser: RequestHandler = (req, res) => {
 
   const { name, email } = req.body;
 
-  if (name) user.name = name;
-  if (email) {
-    if (!validator.isEmail(email)) {
+  if (name !== undefined) {
+    if (!isValidName(name)) {
+      res.status(400).json({ error: "Nome inválido" });
+      return;
+    }
+    user.name = name.trim();
+  }
+
+  if (email !== undefined) {
+    if (!isValidEmail(email)) {
       res.status(400).json({ error: "Email inválido" });
       return;
     }
-    user.email = email;
+    user.email = email.toLowerCase();
   }
 
-  res.json(user);
+  res.status(200).json(user);
+  return;
 };
 
-// 🟢 Deletar usuário
-export const deleteUser: RequestHandler = (req, res) => {
+export const deleteUser: RequestHandler = async (req, res) => {
   const { id } = req.params;
   const index = users.findIndex((u) => u.id === id);
 
@@ -88,5 +102,7 @@ export const deleteUser: RequestHandler = (req, res) => {
   }
 
   users.splice(index, 1);
-  res.json({ message: "Usuário deletado com sucesso" });
+
+  res.status(200).json({ message: "Usuário deletado com sucesso" });
+  return;
 };

@@ -15,22 +15,18 @@ export class BankingFactory {
         return new OpenBankingClient(
           process.env.TINK_CLIENT_ID!,
           process.env.TINK_CLIENT_SECRET!,
-          process.env.TINK_TOKEN_URL!,
-          process.env.TINK_API_URL!,
-          process.env.TINK_SCOPES!.split(",")
+          Number(process.env.TINK_TIMEOUT_MS) || 15000
         );
 
       case "truelayer":
         return new OpenBankingClient(
           process.env.TRUELAYER_CLIENT_ID!,
           process.env.TRUELAYER_CLIENT_SECRET!,
-          process.env.TRUELAYER_TOKEN_URL!,
-          process.env.TRUELAYER_API_URL!,
-          process.env.TRUELAYER_SCOPES!.split(" ")
+          Number(process.env.TRUELAYER_TIMEOUT_MS) || 15000
         );
 
       default:
-        throw new Error("Provider not supported");
+        throw new Error(`Provider '${provider}' not supported`);
     }
   }
 }
