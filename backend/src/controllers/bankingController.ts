@@ -1,23 +1,29 @@
 import { Request, Response } from "express";
+import BankingService from "../services/bankingService";
 
-export const getAccounts = (req: Request, res: Response) => {
-  res.json({
-    accounts: [
-      { id: "acc1", name: "Conta Corrente", balance: 4500 },
-      { id: "acc2", name: "Conta Poupança", balance: 12000.5 },
-    ],
-  });
+export const getAccounts = async (req: Request, res: Response) => {
+  try {
+    const accounts = await BankingService.getAccounts();
+    res.json({ accounts });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao buscar contas" });
+  }
 };
 
-export const getTransactions = (req: Request, res: Response) => {
-  res.json({
-    transactions: [
-      { id: "tx1", description: "Supermercado", amount: -150.5 },
-      { id: "tx2", description: "Salário", amount: 5000 },
-    ],
-  });
+export const getTransactions = async (req: Request, res: Response) => {
+  try {
+    const transactions = await BankingService.getTransactions();
+    res.json({ transactions });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao buscar transações" });
+  }
 };
 
-export const connectBank = (req: Request, res: Response) => {
-  res.json({ message: "Banco conectado com sucesso" });
+export const connectBank = async (req: Request, res: Response) => {
+  try {
+    const result = await BankingService.connectBank();
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao conectar banco" });
+  }
 };
