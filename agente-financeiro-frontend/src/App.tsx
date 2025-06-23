@@ -23,8 +23,8 @@ export default function App() {
     setIsSidebarOpen(false);
   }, [location]);
 
-  const getPageTitle = (pathname: string) => {
-    switch (pathname) {
+  const pageTitle = () => {
+    switch (location.pathname) {
       case "/dashboard":
         return "Dashboard";
       case "/relatorios":
@@ -39,109 +39,74 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-blue-50 to-white font-['Inter']">
+    <div
+      className="columns is-gapless is-mobile"
+      style={{ minHeight: "100vh", backgroundColor: "#14161A" }}
+    >
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 w-64 bg-blue-900 text-white transform ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:relative md:translate-x-0 transition-transform duration-200 ease-in-out z-20`}
+        className={`menu column is-2 ${
+          isSidebarOpen ? "" : "is-hidden-mobile"
+        }`}
+        style={{ backgroundColor: "#14161A", color: "#ffffff" }}
       >
-        <div className="p-6 border-b border-blue-800">
-          <h1 className="text-2xl font-bold tracking-tight">
-            Agente Financeiro
-          </h1>
+        <div className="menu-label has-text-white has-text-centered mt-5 mb-3">
+          <h1 className="title is-4 has-text-white">Agente Financeiro</h1>
         </div>
-        <nav className="flex-1 px-4 py-6">
-          <ul className="space-y-1">
-            <li>
-              <NavLink
-                to="/dashboard"
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-3 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors duration-200 ${
-                    isActive ? "bg-blue-700" : ""
-                  }`
-                }
-              >
-                <FiBarChart2 className="mr-3" />
-                Dashboard
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/relatorios"
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-3 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors duration-200 ${
-                    isActive ? "bg-blue-700" : ""
-                  }`
-                }
-              >
-                <FiFileText className="mr-3" />
-                Relatórios
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/alertas"
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-3 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors duration-200 ${
-                    isActive ? "bg-blue-700" : ""
-                  }`
-                }
-              >
-                <FiAlertCircle className="mr-3" />
-                Alertas
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/configuracoes"
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-3 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors duration-200 ${
-                    isActive ? "bg-blue-700" : ""
-                  }`
-                }
-              >
-                <FiSettings className="mr-3" />
-                Configurações
-              </NavLink>
-            </li>
-          </ul>
-        </nav>
+
+        <ul className="menu-list">
+          <MenuItem to="/dashboard" icon={<FiBarChart2 />} label="Dashboard" />
+          <MenuItem to="/relatorios" icon={<FiFileText />} label="Relatórios" />
+          <MenuItem to="/alertas" icon={<FiAlertCircle />} label="Alertas" />
+          <MenuItem
+            to="/configuracoes"
+            icon={<FiSettings />}
+            label="Configurações"
+          />
+        </ul>
       </aside>
 
-      {/* Overlay for mobile */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-10 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        ></div>
-      )}
-
-      {/* Main content */}
-      <main className="flex-1 flex flex-col">
-        <header className="bg-white shadow-sm p-4 flex justify-between items-center">
-          <div className="flex items-center">
+      {/* Main */}
+      <div className="column is-flex is-flex-direction-column">
+        {/* Header */}
+        <nav
+          className="navbar has-shadow"
+          style={{ backgroundColor: "#14161A" }}
+        >
+          <div className="navbar-brand">
             <button
-              className="block md:hidden mr-4"
-              onClick={() => setIsSidebarOpen(true)}
+              className="navbar-item is-hidden-tablet"
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             >
-              <FiMenu size={24} />
+              <FiMenu size={22} />
             </button>
-            <h2 className="text-2xl font-semibold text-gray-800">
-              {getPageTitle(location.pathname)}
-            </h2>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button className="relative">
-              <FiBell size={20} />
-            </button>
-            <div className="flex items-center">
-              <span className="mr-2">User Name</span>
-              <FiChevronDown />
+            <div className="navbar-item">
+              <h2 className="title is-5 has-text-white">{pageTitle()}</h2>
             </div>
           </div>
-        </header>
-        <div className="flex-1 p-8 overflow-y-auto">
+
+          <div className="navbar-menu is-active">
+            <div className="navbar-end">
+              <div className="navbar-item">
+                <FiBell size={20} />
+              </div>
+              <div className="navbar-item has-dropdown is-hoverable">
+                <div className="navbar-link has-text-white">
+                  <span className="mr-2">User Name</span>
+                  <FiChevronDown />
+                </div>
+
+                <div className="navbar-dropdown is-right">
+                  <a className="navbar-item">Perfil</a>
+                  <a className="navbar-item">Sair</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        {/* Content */}
+        <main className="p-5 is-flex-grow-1">
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/relatorios" element={<Relatorios />} />
@@ -150,19 +115,45 @@ export default function App() {
             <Route
               path="*"
               element={
-                <div className="text-center py-10">
-                  <h2 className="text-2xl font-semibold text-gray-800">
-                    Página não encontrada
-                  </h2>
-                  <p className="text-gray-600 mt-2">
+                <div className="has-text-centered mt-6">
+                  <h2 className="title is-3">Página não encontrada</h2>
+                  <p className="subtitle is-6">
                     A página que você está procurando não existe.
                   </p>
                 </div>
               }
             />
           </Routes>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
+  );
+}
+
+// 🔥 Componente Menu Item adaptado para Bulma
+function MenuItem({
+  to,
+  icon,
+  label,
+}: {
+  to: string;
+  icon: React.ReactNode;
+  label: string;
+}) {
+  return (
+    <li>
+      <NavLink
+        to={to}
+        className={({ isActive }) =>
+          `is-flex is-align-items-center px-3 py-2 ${
+            isActive ? "has-background-link" : "has-text-white"
+          }`
+        }
+        style={{ borderRadius: "8px" }}
+      >
+        {icon}
+        <span className="ml-2">{label}</span>
+      </NavLink>
+    </li>
   );
 }
