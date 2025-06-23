@@ -1,36 +1,14 @@
-import { Request, Response, RequestHandler } from "express";
-import { v4 as uuidv4 } from "uuid";
-import validator from "validator";
+import { Request, Response } from "express";
+import { UserService } from "../services/userService";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
-const users: User[] = [
-  { id: "1", name: "Gustavo", email: "gustavo@email.com" },
-];
-
-const findUserById = (id: string): User | undefined =>
-  users.find((u) => u.id === id);
-
-const isValidEmail = (email: unknown): email is string => {
-  return typeof email === "string" && validator.isEmail(email);
-};
-
-const isValidName = (name: unknown): name is string => {
-  return typeof name === "string" && name.trim().length > 0;
-};
-
-export const getUsers: RequestHandler = async (_req, res) => {
+export const getUsers = async (_req: Request, res: Response) => {
+  const users = await UserService.getUsers();
   res.status(200).json(users);
-  return;
 };
 
-export const getUserById: RequestHandler = async (req, res) => {
+export const getUserById = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const user = findUserById(id);
+  const user = await UserService.getUserById(id);
 
   if (!user) {
     res.status(404).json({ error: "Usuário não encontrado" });
@@ -38,71 +16,38 @@ export const getUserById: RequestHandler = async (req, res) => {
   }
 
   res.status(200).json(user);
-  return;
 };
 
-export const createUser: RequestHandler = async (req, res) => {
+export const createUser = async (req: Request, res: Response) => {
   const { name, email } = req.body;
 
-  if (!isValidName(name) || !isValidEmail(email)) {
-    res.status(400).json({ error: "Nome e email válidos são obrigatórios" });
-    return;
+  try {
+    const newUser = await UserService.createUser(name, email);
+    res.status(201).json(newUser);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
   }
-
-  const newUser: User = {
-    id: uuidv4(),
-    name: name.trim(),
-    email: email.toLowerCase(),
-  };
-
-  users.push(newUser);
-
-  res.status(201).json(newUser);
-  return;
 };
 
-export const updateUser: RequestHandler = async (req, res) => {
+export const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const user = findUserById(id);
-
-  if (!user) {
-    res.status(404).json({ error: "Usuário não encontrado" });
-    return;
-  }
-
   const { name, email } = req.body;
 
-  if (name !== undefined) {
-    if (!isValidName(name)) {
-      res.status(400).json({ error: "Nome inválido" });
-      return;
-    }
-    user.name = name.trim();
+  try {
+    const updatedUser = await UserService.updateUser(id, name, email);
+    res.status(200).json(updatedUser);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
   }
-
-  if (email !== undefined) {
-    if (!isValidEmail(email)) {
-      res.status(400).json({ error: "Email inválido" });
-      return;
-    }
-    user.email = email.toLowerCase();
-  }
-
-  res.status(200).json(user);
-  return;
 };
 
-export const deleteUser: RequestHandler = async (req, res) => {
+export const deleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const index = users.findIndex((u) => u.id === id);
 
-  if (index === -1) {
-    res.status(404).json({ error: "Usuário não encontrado" });
-    return;
+  try {
+    await UserService.deleteUser(id);
+    res.status(200).json({ message: "Usuário deletado com sucesso" });
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
   }
-
-  users.splice(index, 1);
-
-  res.status(200).json({ message: "Usuário deletado com sucesso" });
-  return;
 };
