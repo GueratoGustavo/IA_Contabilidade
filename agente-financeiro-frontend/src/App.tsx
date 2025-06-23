@@ -14,10 +14,14 @@ import Dashboard from "./pages/Dashboard";
 import Relatorios from "./pages/Relatorios";
 import Alertas from "./pages/Alertas";
 import Configuracoes from "./pages/Configuracoes";
+import AuthPage from "./pages/AuthPage";
+import PrivateRoute from "../components/PrivateRoute";
 
 export default function App() {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const isAuthPage = location.pathname === "/";
 
   useEffect(() => {
     setIsSidebarOpen(false);
@@ -37,6 +41,25 @@ export default function App() {
         return "Agente Financeiro";
     }
   };
+
+  if (isAuthPage) {
+    return (
+      <Routes>
+        <Route path="/" element={<AuthPage />} />
+        <Route
+          path="*"
+          element={
+            <div className="has-text-centered mt-6">
+              <h2 className="title is-3">Página não encontrada</h2>
+              <p className="subtitle is-6">
+                A página que você está procurando não existe.
+              </p>
+            </div>
+          }
+        />
+      </Routes>
+    );
+  }
 
   return (
     <div
@@ -98,7 +121,15 @@ export default function App() {
 
                 <div className="navbar-dropdown is-right">
                   <a className="navbar-item">Perfil</a>
-                  <a className="navbar-item">Sair</a>
+                  <a
+                    className="navbar-item"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      window.location.href = "/";
+                    }}
+                  >
+                    Sair
+                  </a>
                 </div>
               </div>
             </div>
@@ -108,10 +139,38 @@ export default function App() {
         {/* Content */}
         <main className="p-5 is-flex-grow-1">
           <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/relatorios" element={<Relatorios />} />
-            <Route path="/alertas" element={<Alertas />} />
-            <Route path="/configuracoes" element={<Configuracoes />} />
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/relatorios"
+              element={
+                <PrivateRoute>
+                  <Relatorios />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/alertas"
+              element={
+                <PrivateRoute>
+                  <Alertas />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/configuracoes"
+              element={
+                <PrivateRoute>
+                  <Configuracoes />
+                </PrivateRoute>
+              }
+            />
             <Route
               path="*"
               element={
@@ -130,7 +189,6 @@ export default function App() {
   );
 }
 
-// 🔥 Componente Menu Item adaptado para Bulma
 function MenuItem({
   to,
   icon,
