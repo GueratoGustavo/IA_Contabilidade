@@ -1,4 +1,9 @@
-import { Request, Response, RequestHandler } from "express";
+import { RequestHandler } from "express";
+import {
+  agentConversationService,
+  getAgentTasksService,
+  createAgentTaskService,
+} from "../services/agentService";
 
 export const agentConversation: RequestHandler = (req, res) => {
   const { message } = req.body;
@@ -8,20 +13,13 @@ export const agentConversation: RequestHandler = (req, res) => {
     return;
   }
 
-  res.json({
-    reply: `IA: Recebi sua mensagem "${message}". Como posso te ajudar mais?`,
-  });
-  return;
+  const reply = agentConversationService(message);
+  res.json({ reply });
 };
 
 export const getAgentTasks: RequestHandler = (req, res) => {
-  res.json({
-    tasks: [
-      { id: "task1", description: "Analisar fluxo de caixa" },
-      { id: "task2", description: "Recomendar investimentos" },
-    ],
-  });
-  return;
+  const tasks = getAgentTasksService();
+  res.json({ tasks });
 };
 
 export const createAgentTask: RequestHandler = (req, res) => {
@@ -32,9 +30,9 @@ export const createAgentTask: RequestHandler = (req, res) => {
     return;
   }
 
+  const task = createAgentTaskService(description);
   res.status(201).json({
     message: "Tarefa criada com sucesso",
-    task: { id: "task3", description },
+    task,
   });
-  return;
 };
