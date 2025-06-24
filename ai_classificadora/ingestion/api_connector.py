@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 class APIConnector:
     """
-    Classe para integração com APIs externas (exemplo: ERP, 
+    Classe para integração com APIs externas (exemplo: ERP,
     Serviços de terceiros).
     Exemplo de uso:
         connector = APIConnector(base_url="https://api.exemplo.com")
