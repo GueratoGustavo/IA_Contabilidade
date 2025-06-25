@@ -1,0 +1,21 @@
+# Configurações do modelo de machine learning
+
+model:
+  name: "random_forest_classifier"
+  version: "1.0.0"
+  parameters:
+    n_estimators: 100
+    max_depth: 10
+    random_state: 42
+    class_weight: balanced
+
+training:
+  batch_size: 32
+  epochs: 10
+  validation_split: 0.2
+  shuffle: true
+
+paths:
+  model_save_path: "ai_classificadora/models/saved/modelo.joblib"
+  training_data_path: "ai_classificadora/data/processed/training_data.csv"
+  validation_data_path: "ai_classificadora/data/processed/validation_data.csv"

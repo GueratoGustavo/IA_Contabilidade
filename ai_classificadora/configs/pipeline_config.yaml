@@ -1,0 +1,26 @@
+pipeline:
+  ingestion:
+    batch_size: 500
+    max_retries: 3
+    retry_delay_seconds: 5
+
+  preprocessing:
+    fill_na_method: "median"
+    drop_duplicates: true
+    categorical_encoding: "one_hot"
+
+  feature_engineering:
+    create_interactions: true
+    polynomial_degree: 2
+
+  validation:
+    allowed_missing_pct: 0.05
+    feature_range_limits:
+      feature1: [0, 100]
+      feature2: [10, 5000]
+
+paths:
+  raw_data_path: "ai_classificadora/data/raw"
+  interim_data_path: "ai_classificadora/data/interim"
+  features_data_path: "ai_classificadora/data/features"
+  processed_data_path: "ai_classificadora/data/processed"
