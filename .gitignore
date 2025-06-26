@@ -7,8 +7,8 @@
 # Ignorar datasets grandes
 C:\Users\guera\Documentos\agente-financeiro\ai_classificadora/data/raw/dataset.csv
 C:\Users\guera\Documentos\agente-financeiro\ai_classificadora/data/processed/training_data.csv
-processed/training_data.csv
-dataset.csv
+
 
 # Ignorar modelos grandes
 C:\Users\guera\Documentos\agente-financeiro\ai_classificadora\models\rf_pipeline.pkl
+C:\Users\guera\Documentos\agente-financeiro\ai_classificadora\models\rf_pipeline_best.pkl
