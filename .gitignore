@@ -3,3 +3,12 @@
 /generated/prisma
 
 .venv
+
+# Ignorar datasets grandes
+ai_classificadora/data/raw/dataset.csv
+ai_classificadora/data/processed/training_data.csv
+processed/training_data.csv
+dataset.csv
+
+# Ignorar modelos grandes
+ai_classificadora/models/rf_pipeline.pkl
