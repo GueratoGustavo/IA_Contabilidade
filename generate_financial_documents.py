@@ -1,7 +1,7 @@
 import pandas as pd
 import random
 from faker import Faker
-from datetime import datetime, timedelta
+from datetime import timedelta
 import os
 import uuid
 
