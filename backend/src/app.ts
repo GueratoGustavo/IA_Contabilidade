@@ -14,6 +14,7 @@ app.use("/auth", authRouter);
 app.use("/banking", bankingRouter);
 app.use("/analysis", analysisRouter);
 app.use("/agent", agentRouter);
+app.use("/openbanking", bankingRouter);
 
 app.get("/", (req, res) => {
   res.send("API Agente Financeiro IA rodando 🚀");
