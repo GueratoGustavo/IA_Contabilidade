@@ -1,6 +1,6 @@
 import express from "express";
 import classifierRoutes from "../src/routes/classifierRoutes";
-import { errorHandler } from "../src/middlewares/errorHandler";
+import { errorHandler } from "./middlewares/errorHandler";
 
 const app = express();
 
