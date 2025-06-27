@@ -1,4 +1,14 @@
 {
+  "name": "agente-financeiro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node dist/server.js",
+    "build": "tsc",
+    "test": "jest"
+  },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@prisma/client": "^6.10.1",
