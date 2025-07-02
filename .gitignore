@@ -13,3 +13,5 @@ C:\Users\guera\Documentos\agente-financeiro\ai_classificadora/data/processed/tra
 C:\Users\guera\Documentos\agente-financeiro\ai_classificadora\models\rf_pipeline.pkl
 C:\Users\guera\Documentos\agente-financeiro\ai_classificadora\models\rf_pipeline_best.pkl
 C:\Users\guera\Documentos\agente-financeiro\ai_classificadora\models\xgb_pipeline_best.pkl
+
+/frontend/node_modules
