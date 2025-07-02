@@ -1,19 +1,25 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "./Button";
-import { MenuIcon } from "../icons/MenuIcon";
-import { XIcon } from "../icons/XIcon";
+import { MenuIcon, XIcon } from "../icons";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
+
+  const handleTestClick = () => {
+    closeMenu();
+    navigate("/login"); // redireciona para /login
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-klyro-dark/80 backdrop-blur-sm">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <div className="text-2xl font-bold text-white z-10">
+        <div className="text-2xl font-bold text-white z-20">
           <a href="#" onClick={closeMenu}>
             Klyro<span className="text-klyro-primary">.</span>
           </a>
@@ -43,12 +49,13 @@ const Header: React.FC = () => {
 
         {/* Botão Testar grátis no desktop */}
         <div className="hidden md:block">
-          <Button variant="primary">Testar grátis</Button>
+          <Button variant="primary" onClick={handleTestClick}>
+            Testar grátis
+          </Button>
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden z-10 flex items-center space-x-4">
-          {/* Botão menu mobile */}
+        <div className="md:hidden z-20 flex items-center space-x-4">
           <button
             onClick={toggleMenu}
             className="text-white focus:outline-none"
@@ -65,7 +72,7 @@ const Header: React.FC = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`absolute top-0 left-0 w-full h-screen bg-gray-900 md:hidden transition-transform duration-300 ease-in-out ${
+        className={`absolute top-0 left-0 w-full h-screen bg-slate-900/95 backdrop-blur-sm md:hidden transition-transform duration-300 ease-in-out z-10 ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         style={{ paddingTop: "80px" }}
@@ -92,7 +99,11 @@ const Header: React.FC = () => {
           >
             Contato
           </a>
-          <Button variant="primary" className="w-full mt-6" onClick={closeMenu}>
+          <Button
+            variant="primary"
+            className="w-full mt-6"
+            onClick={handleTestClick}
+          >
             Testar grátis
           </Button>
         </nav>
