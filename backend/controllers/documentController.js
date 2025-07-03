@@ -1,50 +1,30 @@
-const { spawn } = require("child_process");
 const path = require("path");
-const Document = require("../models/Document");
+const documentService = require("../services/documentService");
+const logger = require("../utils/logger");
 
 exports.uploadDocument = async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Arquivo não enviado." });
+    }
+
     const filePath = req.file.path;
+    const userId = req.user?.id;
 
-    // Chama script Python para classificar
-    const pythonProcess = spawn("python", [
-      path.join(__dirname, "../python/classify.py"),
+    const classification = await documentService.classifyDocument(filePath);
+
+    const newDocument = await documentService.saveDocument({
+      userId,
       filePath,
-    ]);
-
-    let result = "";
-
-    pythonProcess.stdout.on("data", (data) => {
-      result += data.toString();
-    });
-
-    pythonProcess.stderr.on("data", (data) => {
-      console.error(`Erro no Python: ${data}`);
-    });
-
-    pythonProcess.on("close", async (code) => {
-      const classification = result.trim();
-
-      const document = new Document({
-        user: req.user.id,
-        type: classification || "Desconhecido", // Ex: "Nota Fiscal"
-        date: new Date(), // No futuro: extraído da IA ou do OCR
-        value: 0, // Mock — depois será extraído da imagem/texto
-        description: "",
-        category: "", // Ou derive de classification
-        cnpj: "", // No futuro: OCR/regex
         classification,
-      });
+    });
 
-      await document.save();
-
-      res.status(200).json({
-        message: "Documento classificado com sucesso!",
-        document,
-      });
+    res.status(200).json({
+      message: "Documento classificado com sucesso!",
+      document: newDocument,
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Erro no upload do documento." });
+    logger.error("Erro no upload de documento", err);
+    res.status(500).json({ error: "Erro ao processar o documento." });
   }
 };
