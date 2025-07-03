@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const authRoutes = require("./routes/authRoutes");
+const documentRoutes = require("./routes/documentRoutes"); // ✅ NOVO
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 
 // Rotas
 app.use("/api/auth", authRoutes);
+app.use("/api/documents", documentRoutes); // ✅ NOVO
 
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
