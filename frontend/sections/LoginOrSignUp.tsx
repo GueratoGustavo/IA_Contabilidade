@@ -19,6 +19,7 @@ const LoginOrSignUp: React.FC = () => {
 
   const handleToggleView = () => {
     setIsLoginView(!isLoginView);
+    setFormData({ name: "", email: "", password: "", confirmPassword: "" });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +27,7 @@ const LoginOrSignUp: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
@@ -43,15 +44,52 @@ const LoginOrSignUp: React.FC = () => {
       return;
     }
 
-    console.log("Form submitted", { isLoginView, formData });
+    try {
+      const endpoint = isLoginView ? "login" : "register";
+      const body = isLoginView
+        ? { email: formData.email, password: formData.password }
+        : {
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+          };
+
+      const response = await fetch(
+        `http://localhost:5000/api/auth/${endpoint}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Erro desconhecido");
+        return;
+      }
+
+      if (isLoginView) {
+        localStorage.setItem("token", data.token);
+        console.log("Usuário logado:", data.user);
+        // Redirecionar para dashboard, por exemplo
+        // navigate("/dashboard");
+      } else {
+        alert("Usuário criado com sucesso! Faça login.");
+        setIsLoginView(true);
+        setFormData({ name: "", email: "", password: "", confirmPassword: "" });
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      setError("Erro na comunicação com o servidor");
+    }
   };
 
   return (
     <div className="bg-klyro-dark min-h-screen">
-      {/* Header fixo */}
       <Header />
 
-      {/* Conteúdo centralizado abaixo do header */}
       <div className="flex justify-center items-center px-4 py-20 min-h-screen">
         <div className="w-full max-w-md p-8 space-y-6 bg-slate-800/60 rounded-xl shadow-2xl backdrop-blur-lg border border-slate-700 mt-10">
           <div className="text-center">
