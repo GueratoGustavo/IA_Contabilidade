@@ -1,0 +1,20 @@
+Organizations:
+  - &Org1
+    Name: Org1MSP
+    ID: Org1MSP
+
+Orderer:
+  OrdererType: solo
+  Addresses:
+    - orderer.example.com:7050
+  Organizations:
+
+Channel: &ChannelDefaults
+  Consortium: SampleConsortium
+
+Profiles:
+  SampleChannel:
+    <<: *ChannelDefaults
+    Application:
+      Organizations:
+        - *Org1
