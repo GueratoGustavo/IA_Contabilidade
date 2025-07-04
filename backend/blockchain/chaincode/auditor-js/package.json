@@ -1,0 +1,17 @@
+{
+  "name": "auditor",
+  "version": "1.0.0",
+  "description": "Smart Contract para Auditoria Blockchain de Documentos",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "fabric-contract-api": "^2.2.0",
+    "fabric-shim": "^2.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0"
+  }
+}
