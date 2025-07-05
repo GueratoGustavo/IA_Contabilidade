@@ -32,16 +32,15 @@ Este backend é a base do MVP para o Mês 1 do Agente Financeiro Contábil, cujo
 
 ## 🏗 Arquitetura do Sistema
 
-```mermaid
 graph LR
-  Client[Cliente Frontend]
-  API[API Node.js/Express]
-  Queue[BullMQ (Redis)]
-  Worker[Worker Node.js]
-  PythonSvc[Microserviço Python IA]
-  Mongo[MongoDB]
-  WS[Socket.IO]
-  Blockchain[Blockchain Auditoria]
+  Client("Cliente Frontend")
+  API("API Node.js/Express")
+  Queue("BullMQ (Redis)")
+  Worker("Worker Node.js")
+  PythonSvc("Microserviço Python IA")
+  Mongo("MongoDB")
+  WS("Socket.IO")
+  Blockchain("Blockchain Auditoria")
 
   Client -->|POST /upload| API
   API --> Queue
